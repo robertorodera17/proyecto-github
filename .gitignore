@@ -1,0 +1,12 @@
+# Secretos (RNF-04)
+.env
+
+# Base de datos local
+*.db
+*.sqlite3
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

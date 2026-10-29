@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h1>Movimientos</h1>
+
+<p><button type="button" hx-get="/movimientos/nuevo" hx-target="#formulario">Agregar movimiento</button></p>
+<div id="formulario"></div>
+
+{% if pagina.movimientos %}
+<table class="grilla">
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th class="numero">Monto</th>
+      <th>Tipo</th>
+      <th>Clasificación</th>
+      <th>Fecha</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in pagina.movimientos %}
+    {# Doble click (o Enter con la fila enfocada) abre la modificación (RF-10). #}
+    <tr data-id="{{ m.id }}" tabindex="0" title="Doble click para modificar"
+        hx-get="/movimientos/{{ m.id }}/editar" hx-trigger="dblclick, keyup[key=='Enter']" hx-target="#formulario">
+      <td>{{ m.descripcion }}</td>
+      <td class="numero">{{ m.monto | monto }}</td>
+      <td>{{ m.tipo }}</td>
+      <td>{{ m.clasificacion }}</td>
+      <td>{{ m.fecha | fecha }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if pagina.total_paginas > 1 %}
+<nav class="paginas" aria-label="Páginas">
+  {% if pagina.numero > 1 %}<a href="/?pagina={{ pagina.numero - 1 }}" rel="prev">← Anterior</a>{% endif %}
+  <span>Página {{ pagina.numero }} de {{ pagina.total_paginas }}</span>
+  {% if pagina.numero < pagina.total_paginas %}<a href="/?pagina={{ pagina.numero + 1 }}" rel="next">Siguiente →</a>{% endif %}
+</nav>
+{% endif %}
+
+{% else %}
+<p>No hay movimientos cargados.</p>
+{% endif %}
+{% endblock %}

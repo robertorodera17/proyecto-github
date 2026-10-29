@@ -1,0 +1,53 @@
+{% macro invalido(campo) -%}
+  {% if errores[campo] %}aria-invalid="true" aria-describedby="error-{{ campo }}"{% endif %}
+{%- endmacro %}
+{# Alta si movimiento_id es None; si no, modificación. #}
+{% set editando = movimiento_id is not none %}
+{% set url_clasificacion = "/movimientos/%d/clasificacion" % movimiento_id if editando else "/movimientos/nuevo/clasificacion" %}
+<form id="form-movimiento" class="movimiento" novalidate hx-target="this" hx-swap="outerHTML"
+      hx-post="{{ '/movimientos/%d' % movimiento_id if editando else '/movimientos' }}">
+  <h2>{{ "Modificar movimiento" if editando else "Nuevo movimiento" }}</h2>
+
+  <label>Descripción
+    <input name="descripcion" value="{{ datos.descripcion }}" autocomplete="off" autofocus {{ invalido("descripcion") }}
+           {#- La clasificación se propone solo al crear; al modificar se cambia a mano (RF-15). #}
+           {% if not editando %}hx-post="{{ url_clasificacion }}" hx-trigger="input changed delay:300ms"
+           hx-target="#campo-clasificacion" hx-swap="outerHTML" hx-include="closest form"{% endif %}>
+    {% with campo="descripcion" %}{% include "_campo.html" %}{% endwith %}
+  </label>
+
+  <label>Tipo de movimiento
+    <select name="tipo" {{ invalido("tipo") }}
+            hx-post="{{ url_clasificacion }}" hx-trigger="change"
+            hx-target="#campo-clasificacion" hx-swap="outerHTML" hx-include="closest form">
+      <option value="" disabled hidden {% if datos.tipo not in tipos %}selected{% endif %}>Elegí el tipo</option>
+      {% for t in tipos %}
+      <option value="{{ t }}" {% if t == datos.tipo %}selected{% endif %}>{{ t }}</option>
+      {% endfor %}
+    </select>
+    {% with campo="tipo" %}{% include "_campo.html" %}{% endwith %}
+  </label>
+
+  <label>Monto
+    {# Texto y no number: el navegador no tiene que reinterpretar "1.200" ni "12,5"; valida el servidor. #}
+    <input name="monto" value="{{ datos.monto }}" inputmode="numeric" autocomplete="off" placeholder="1200" {{ invalido("monto") }}>
+    {% with campo="monto" %}{% include "_campo.html" %}{% endwith %}
+  </label>
+
+  {% include "_clasificacion.html" %}
+
+  <label>Fecha
+    <input type="date" name="fecha" value="{{ datos.fecha }}" {{ invalido("fecha") }}>
+    {% with campo="fecha" %}{% include "_campo.html" %}{% endwith %}
+  </label>
+
+  <div class="acciones">
+    <button type="submit">Guardar</button>
+    <button type="button" onclick="document.getElementById('formulario').replaceChildren()">Cancelar</button>
+    {% if editando %}
+    {# Solo en la modificación, y con confirmación (RF-11, RF-28). #}
+    <button type="button" class="peligro" hx-post="/movimientos/{{ movimiento_id }}/eliminar"
+            hx-confirm="¿Eliminar el movimiento «{{ datos.descripcion }}»?">Eliminar</button>
+    {% endif %}
+  </div>
+</form>

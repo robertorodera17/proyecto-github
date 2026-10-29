@@ -1,0 +1,19 @@
+fastapi==0.115.14
+uvicorn[standard]==0.54.0
+python-dotenv==1.2.4
+tzdata==2026.5
+SQLAlchemy==2.1.6
+alembic==1.20.0
+Jinja2==3.1.6
+python-multipart==0.0.32
+itsdangerous==2.2.0
+# passlib 1.7.4 no funciona con bcrypt >= 4.1: no subir bcrypt sin reemplazar passlib.
+passlib==1.7.4
+bcrypt==4.0.1
+APScheduler==3.11.3
+tzlocal==5.4.4
+
+# tests
+pytest==9.1.1
+httpx==0.28.1
+aiosmtpd==1.4.6

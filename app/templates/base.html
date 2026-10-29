@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Registro de movimientos{% endblock %}</title>
+  {% if operador %}
+  {# htmx no reemplaza el contenido con respuestas 4xx; el 422 trae el formulario con sus errores. #}
+  <meta name="htmx-config" content='{"responseHandling": [{"code": "204", "swap": false}, {"code": "[23]..", "swap": true}, {"code": "422", "swap": true}, {"code": "[45]..", "swap": false, "error": true}]}'>
+  <script src="/static/htmx.min.js"></script>
+  {% endif %}
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 60rem; padding: 0 1rem; }
+    form.login { display: grid; gap: .75rem; max-width: 20rem; }
+    label { display: grid; gap: .25rem; }
+    .error { color: #b00020; }
+    .aviso { color: #6b4e00; }
+    .barra { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; }
+    table.grilla { border-collapse: collapse; width: 100%; }
+    .grilla th, .grilla td { border-bottom: 1px solid #ddd; padding: .4rem .6rem; text-align: left; }
+    .grilla .numero { text-align: right; font-variant-numeric: tabular-nums; }
+    .paginas { display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; }
+    form.movimiento { display: grid; gap: .75rem; max-width: 28rem; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #ccc; border-radius: .5rem; }
+    form.movimiento h2 { margin: 0; font-size: 1.2rem; }
+    [aria-invalid="true"] { border-color: #b00020; outline: 1px solid #b00020; }
+    .acciones { display: flex; gap: .5rem; }
+    .acciones .peligro { margin-left: auto; color: #b00020; }
+    .grilla tbody tr { cursor: pointer; }
+    .grilla tbody tr:hover, .grilla tbody tr:focus { background: #f3f6fb; }
+  </style>
+</head>
+<body>
+  {% if operador %}
+  <header class="barra">
+    <span>{{ operador.nombre }} ({{ operador.sigla }})</span>
+    <form method="post" action="/logout"><button>Cerrar sesión</button></form>
+  </header>
+  {% endif %}
+  {% block contenido %}{% endblock %}
+</body>
+</html>

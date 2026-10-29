@@ -1,0 +1,14 @@
+{# Selector de clasificación; se reemplaza entero cuando cambian la descripción o el tipo. #}
+<label id="campo-clasificacion">Clasificación
+  <select name="clasificacion" {% if not opciones %}disabled{% endif %}
+          {% if errores.clasificacion %}aria-invalid="true" aria-describedby="error-clasificacion"{% endif %}>
+    {# Oculta en la lista: el operador ve solo las clasificaciones del tipo (AC-17, AC-18). #}
+    <option value="" disabled hidden {% if seleccionada not in opciones %}selected{% endif %}>
+      {%- if opciones %}Elegí una clasificación{% else %}Primero elegí el tipo{% endif -%}
+    </option>
+    {% for c in opciones %}
+    <option value="{{ c }}" {% if c == seleccionada %}selected{% endif %}>{{ c }}</option>
+    {% endfor %}
+  </select>
+  {% if errores.clasificacion %}<span class="error" id="error-clasificacion">{{ errores.clasificacion }}</span>{% endif %}
+</label>

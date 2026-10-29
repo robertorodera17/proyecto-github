@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Ingresar — Registro de movimientos{% endblock %}
+{% block contenido %}
+<h1>Ingresar</h1>
+{% if aviso %}<p class="aviso" role="status">{{ aviso }}</p>{% endif %}
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+
+{% if paso == "sigla" %}
+<form class="login" method="post" action="/login/sigla">
+  <label>Sigla <input name="sigla" value="{{ sigla }}" autofocus required autocomplete="username"></label>
+  <button>Continuar</button>
+</form>
+
+{% elif paso == "definir" %}
+<p>Es tu primer ingreso, {{ sigla }}. Definí tu contraseña (mínimo 8 caracteres).</p>
+<form class="login" method="post" action="/login/definir">
+  <input type="hidden" name="sigla" value="{{ sigla }}">
+  <label>Contraseña nueva <input type="password" name="password" autofocus required autocomplete="new-password"></label>
+  <label>Repetir contraseña <input type="password" name="repetir" required autocomplete="new-password"></label>
+  <button>Guardar e ingresar</button>
+</form>
+<p><a href="/login">Usar otra sigla</a></p>
+
+{% elif paso == "ingresar" %}
+<form class="login" method="post" action="/login/ingresar">
+  <input type="hidden" name="sigla" value="{{ sigla }}">
+  <p>Sigla: <strong>{{ sigla }}</strong></p>
+  <label>Contraseña <input type="password" name="password" autofocus required autocomplete="current-password"></label>
+  <button>Ingresar</button>
+</form>
+<p><a href="/login">Usar otra sigla</a></p>
+{% endif %}
+{% endblock %}

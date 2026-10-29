@@ -1,0 +1,2 @@
+{# Mensaje de error de un campo; espera `campo` y `errores`. #}
+{% if errores[campo] %}<span class="error" id="error-{{ campo }}">{{ errores[campo] }}</span>{% endif %}
